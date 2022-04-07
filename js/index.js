@@ -185,6 +185,6 @@ async function checkUser() {
 }
 
 function adminPanel() {
-    return logged ? window.location = '/You-tube-frontend/admin.html' : window.location = '/You-tube-frontend/register.html';
+    return logged ? window.location = 'https://you-tube-frontend.netlify.app/admin.html' : window.location = 'https://you-tube-frontend.netlify.app/register.html';
 }
 

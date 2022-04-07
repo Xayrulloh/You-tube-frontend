@@ -7,7 +7,7 @@ setInterval(() => {
 
 function logOut() {
     window.localStorage.removeItem('token')
-    window.location = '/You-tube-frontend/index.html'
+    window.location = 'https://you-tube-frontend.netlify.app/index.html'
 }
 
 async function checkUser() {
@@ -18,10 +18,10 @@ async function checkUser() {
         
         if (data.status === 400) {
             window.localStorage.removeItem('token')
-            window.location = '/You-tube-frontend/index.html'
+            window.location = 'https://you-tube-frontend.netlify.app/index.html'
         }
     } else {
-        window.location = '/You-tube-frontend/index.html'
+        window.location = 'https://you-tube-frontend.netlify.app/index.html'
     }
 }
 

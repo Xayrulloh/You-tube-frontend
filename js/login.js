@@ -15,5 +15,5 @@ async function login() {
     if (response.status === 400) {usernameInput.value = null; passwordInput.value = null; return alert(response.message);}
 
     window.localStorage.setItem('token', response.token);
-    window.location = '/You-tube-frontend/index.html'
+    window.location = 'https://you-tube-frontend.netlify.app/index.html'
 }

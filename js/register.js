@@ -13,7 +13,7 @@ async function reg() {
     if (result.status === 400) {usernameInput.value = null; passwordInput.value = null; return alert(result.message);}
 
     window.localStorage.setItem('token', result.token);
-    window.location = '/You-tube-frontend/index.html'
+    window.location = 'https://you-tube-frontend.netlify.app/index.html'
 }
 
 showButton.onclick = () => {
