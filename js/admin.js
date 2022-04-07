@@ -1,5 +1,9 @@
-checkUser()
-ownVideo()
+let lastUpdate = ''
+
+setInterval(() => {
+    checkUser()
+    ownVideo()
+}, 2000);
 
 function logOut() {
     window.localStorage.removeItem('token')
@@ -46,14 +50,20 @@ async function ownVideo() {
 
     if (data.status === 400) {return alert(data.message);}
     
-    videosBoard.innerHTML = null
-    for (let video of data.video) {
-        videosBoard.innerHTML += `<li class="video-item">
-        <video src="${backendApi+'/'+video.videoNameFile}" controls=""></video>
-        <p class="content" videoId="${video.videoId}" contenteditable="true" onkeyup="changeVideoName(this)">${video.videoname}</p>
-        <img src="./img/delete.png" width="25px" alt="upload" class="delete-icon" onclick="deleteVideo(this)" videoId="${video.videoId}">
-        </li>`
+    if(JSON.stringify(lastUpdate) != JSON.stringify(data)) {
+        lastUpdate = data
+
+        videosBoard.innerHTML = null
+        for (let video of data.video) {
+            videosBoard.innerHTML += `<li class="video-item">
+            <video src="${backendApi+'/'+video.videoNameFile}" controls=""></video>
+            <p class="content" videoId="${video.videoId}" contenteditable="true" onkeyup="changeVideoName(this)">${video.videoname}</p>
+            <img src="./img/delete.png" width="25px" alt="upload" class="delete-icon" onclick="deleteVideo(this)" videoId="${video.videoId}">
+            </li>`
+        }
     }
+
+    
 }
 
 async function deleteVideo(value) {

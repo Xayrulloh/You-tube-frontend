@@ -1,4 +1,4 @@
-const backendApi = 'http://localhost:5000'
+const backendApi = 'https://youtubeserver.herokuapp.com'
 
 async function requestJSON(route, method, body) {
     try {

@@ -1,53 +1,60 @@
-let logged = false
+let logged = false, lastUpdate = ''
 
-checkUser()
-renderData()
+setInterval(() => {
+    checkUser()
+    renderData()
+}, 2000);
 
 async function renderData() {
     let data = await requestJSON('/info', 'GET')
+    if (JSON.stringify(lastUpdate) != JSON.stringify(data)) {
+        lastUpdate = data
+
+        users.innerHTML = `<h1>YouTube Members</h1>
+        <li class="channel active" id="channel" userId="main">
+        <a>
+        <svg viewbox="0 0 24 24" focusable="false" style="pointer-events: none; display: block; width: 30px; height: 30px;"><g><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8" class="style-scope yt-icon"></path></g></svg>
+        <span>Home</span>
+        </a>`
     
-    users.innerHTML = `<h1>YouTube Members</h1>
-    <li class="channel active" id="channel" userId="main">
-    <a>
-    <svg viewbox="0 0 24 24" focusable="false" style="pointer-events: none; display: block; width: 30px; height: 30px;"><g><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8" class="style-scope yt-icon"></path></g></svg>
-    <span>Home</span>
-    </a>`
-
-    if (data.users.length) {
-        for (let user of data.users) {
-            users.innerHTML += `<li class="channel" id="channel" userId=${user.userId}>
-            <a>
-            <img src="${backendApi+'/'+user.img}" alt="channel-icon" width="30px" height="30px">
-            <span>${user.username}</span>
-            </a>
-            </li>`
-        }
-
-        for (let chanel of channel) {
-            chanel.onclick = async() => {
-                if (chanel.getAttribute('userId') == 'main' && chanel.getAttribute('class').split(' ').length == 1) {
-                    for (let chanel of channel) chanel.classList.remove('active')
-                    chanel.classList.add('active')
-                    
-                    await renderVideo()
-                    
-                } else if (chanel.getAttribute('userId') != 'main') {
-                    for (let chanel of channel) chanel.classList.remove('active')
-                    chanel.classList.add('active')
-                    
-                    await renderVideo(+chanel.getAttribute('userId'))
+        if (data.users.length) {
+            for (let user of data.users) {
+                users.innerHTML += `<li class="channel" id="channel" userId=${user.userId}>
+                <a>
+                <img src="${backendApi+'/'+user.img}" alt="channel-icon" width="30px" height="30px">
+                <span>${user.username}</span>
+                </a>
+                </li>`
+            }
+    
+            for (let chanel of channel) {
+                chanel.onclick = async() => {
+                    if (chanel.getAttribute('userId') == 'main' && chanel.getAttribute('class').split(' ').length == 1) {
+                        for (let chanel of channel) chanel.classList.remove('active')
+                        chanel.classList.add('active')
+                        
+                        await renderVideo()
+                        
+                    } else if (chanel.getAttribute('userId') != 'main') {
+                        for (let chanel of channel) chanel.classList.remove('active')
+                        chanel.classList.add('active')
+                        
+                        await renderVideo(+chanel.getAttribute('userId'))
+                    }
                 }
             }
         }
+        
+        if (data.videos.length) {
+            videos.innerHTML = null
+            await renderVideo()
+        }
     }
-    
-    if (data.videos.length) {
-        videos.innerHTML = null
-        await renderVideo()
-    }
+
 }
 
 searchBox.onkeyup = (e) => {
+    if (e.keyCode === 13) return textSearch(searchBox.value)
     if (searchBox.value) return showExamples(searchBox.value)
 }
 
@@ -146,6 +153,10 @@ async function renderVideo(value = null) {
 }
 
 async function voiceSearch() {
+    if (channel.length) {
+        for (let chanel of channel) chanel.classList.remove('active')
+    }
+    
     const voice = new webkitSpeechRecognition()
     
     voice.lang = 'en-EN'
